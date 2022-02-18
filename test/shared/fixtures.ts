@@ -48,7 +48,7 @@ export async function v2Fixture(provider: Web3Provider, [wallet]: Wallet[]): Pro
   const router02 = await deployContract(
       wallet,
       UniswapV2Router02,
-      [factoryV2.address, WETH.address, VDF_N, VDF_T],
+      [factoryV2.address, WETH.address, VDF_N, VDF_T, VDF_MAX_BLOCK_AGE],
       overrides
   );
 

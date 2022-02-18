@@ -515,22 +515,44 @@ contract UniswapV2Router02 is IUniswapV2Router02, WeakVDF {
         return UniswapV2Library.getAmountsIn(factory, amountOut, path);
     }
 
+    function generateSeed(
+        address origin_,
+        address[] memory path,
+        uint knownQtyIn,
+        uint knownQtyOut
+    )
+        public
+        pure
+        returns (bytes32 seed)
+    {
+        assembly {
+            let p := mload(0x40)
+            mstore(p, origin_)
+            p := add(p, 0x20)
+            mstore(p, mload(path))
+            p := add(p, 0x20)
+            for {let i := 0} lt(i, mload(path)) {i := add(i, 1)} {
+                mstore(p, mload(add(path, add(0x20, mul(i, 0x20)))))
+                p := add(p, 0x20)
+            }
+            mstore(p, knownQtyIn)
+            p := add(p, 0x20)
+            mstore(p, knownQtyOut)
+            p := add(p, 0x20)
+            seed := keccak256(mload(0x40), sub(p, mload(0x40)))
+        }
+    }
+
     function _validateVdf(
         address[] memory path,
         uint knownQtyIn,
         uint knownQtyOut,
         bytes memory proofBytes
     )
-        internal
+        public
         view
     {
-        bytes32 seed = keccak256(abi.encodePacked(
-            tx.origin,
-            path.length,
-            path,
-            knownQtyIn,
-            knownQtyOut
-        ));
+        bytes32 seed = generateSeed(tx.origin, path, knownQtyIn, knownQtyOut);
         require(isValidProof(seed, proofBytes), 'INVALID_PROOF');
     }
 }

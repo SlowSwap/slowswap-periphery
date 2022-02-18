@@ -1,10 +1,10 @@
 import chai, { expect } from 'chai'
 import { Contract } from 'ethers'
+import { bigNumberify } from 'ethers/utils';
 import { deployContract, solidity, MockProvider } from 'ethereum-waffle'
 import { evaluateVdf, generateSeed, generateVdf, generateX, generateChallenge } from '@slowswap/vdf';
-import BigNumber from 'bignumber.js';
 
-import { bigNumberify, randomQuantity, randomHash, mineBlock, getTargetBlock } from './shared/utilities'
+import { randomQuantity, randomHash, mineBlock, getTargetBlock } from './shared/utilities'
 import { VDF_N, VDF_T, VDF_MAX_BLOCK_AGE } from './shared/fixtures'
 
 import TestWeakVDF from '../build/TestWeakVDF.json';
@@ -13,11 +13,9 @@ chai.use(solidity)
 
 describe('WeakVDF', () => {
     const provider = new MockProvider({
-        ganacheOptions: {
-            hardfork: 'istanbul',
-            mnemonic: 'horn horn horn horn horn horn horn horn horn horn horn horn',
-            gasLimit: 9999999,
-        }
+        hardfork: 'istanbul',
+        mnemonic: 'horn horn horn horn horn horn horn horn horn horn horn horn',
+        gasLimit: 9999999,
     });
     const [wallet] = provider.getWallets();
     let weakVdf: Contract;
@@ -49,25 +47,25 @@ describe('WeakVDF', () => {
             const seed = randomHash();
             const { blockHash } = await getTargetBlock(provider);
             const x = generateX(VDF_N, seed, blockHash);
-            const y = evaluateVdf(x, VDF_N, VDF_T);
+            const y = evaluateVdf(x.toString(10), VDF_N, VDF_T);
             const expected = generateChallenge({
                 x,
                 y,
                 n: VDF_N,
                 t: VDF_T,
             });
-            const actual = await weakVdf.generateChallenge(x, y);
+            const actual = await weakVdf.generateChallenge(x.toString(10), y.toString(10));
             expectSameNumber(actual, expected);
         });
     });
 
     describe('expmod()', () => {
         it('works', async () => {
-            const pi = new BigNumber('10573491918793478232872443730032018713895839766681054735181462842707836775171');
-            const c = new BigNumber('74791073374440012948966272821658602093686657895749035935510160203767790612275');
-            const expected = pi.pow(c, VDF_N);
-            const actual = await weakVdf.expmod(pi.toString(10), c.toString(10), VDF_N);
-            expect(actual.toString(10)).to.eq(expected.toString(10));
+            const pi = '10573491918793478232872443730032018713895839766681054735181462842707836775171';
+            const c = '74791073374440012948966272821658602093686657895749035935510160203767790612275';
+            const expected = '5694661073981532927065860030527716976867903315786059041950574589016365555210';
+            const actual = await weakVdf.expmod(pi, c, VDF_N);
+            expect(actual.toString()).to.eq(expected);
         });
     });
 
@@ -95,5 +93,5 @@ describe('WeakVDF', () => {
 })
 
 function expectSameNumber(a: any, b: any): void {
-    expect(bigNumberify(a)).to.eq(bigNumberify(b));
+    expect(bigNumberify(a.toString())).to.eq(bigNumberify(b.toString()));
 }

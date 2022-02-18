@@ -1,13 +1,12 @@
-/*
 import chai, { expect } from 'chai'
 import { Contract } from 'ethers'
 import { AddressZero, Zero, MaxUint256 } from 'ethers/constants'
 import { BigNumber, bigNumberify } from 'ethers/utils'
 import { solidity, MockProvider, createFixtureLoader } from 'ethereum-waffle'
 import { ecsign } from 'ethereumjs-util'
-import { generateVdf } from '@slowswap/vdf';
+import { generateVdf, generateSeed } from '@slowswap/vdf';
 
-import { expandTo18Decimals, getApprovalDigest, mineBlock, MINIMUM_LIQUIDITY } from './shared/utilities'
+import { randomHash, expandTo18Decimals, getApprovalDigest, mineBlock, MINIMUM_LIQUIDITY } from './shared/utilities'
 import { v2Fixture, VDF_N, VDF_T } from './shared/fixtures'
 
 chai.use(solidity)
@@ -306,6 +305,17 @@ describe('UniswapV2Router{01,02}', () => {
         )
       })
 
+      describe('generateSeed', () => {
+          it('works', async () => {
+              const path = [randomHash(20), randomHash(20)];
+              const knownQtyIn = '123';
+              const knownQtyOut = '1234';
+              const expected = generateSeed(wallet.address, path, knownQtyIn, knownQtyOut);
+              const actual = await router.generateSeed(wallet.address, path, knownQtyIn, knownQtyOut);
+              expect(actual).to.eq(expected);
+          });
+      })
+
       describe.only('swapExactTokensForTokens', () => {
         const token0Amount = expandTo18Decimals(5)
         const token1Amount = expandTo18Decimals(10)
@@ -336,7 +346,7 @@ describe('UniswapV2Router{01,02}', () => {
             router.swapExactTokensForTokens(
               swapAmount,
               0,
-              [token0.address, token1.address],
+              path,
               wallet.address,
               MaxUint256,
               proof,
@@ -355,6 +365,14 @@ describe('UniswapV2Router{01,02}', () => {
 
         it('amounts', async () => {
           await token0.approve(routerEventEmitter.address, MaxUint256)
+          const proof = generateVdf({
+              ...COMMON_VDF_OPTS,
+              path,
+              blockHash,
+              blockNumber,
+              knownQtyIn: swapAmount as any,
+              knownQtyOut: Zero as any,
+          });
           await expect(
             routerEventEmitter.swapExactTokensForTokens(
               router.address,
@@ -363,6 +381,7 @@ describe('UniswapV2Router{01,02}', () => {
               [token0.address, token1.address],
               wallet.address,
               MaxUint256,
+              proof,
               overrides
             )
           )
@@ -377,12 +396,21 @@ describe('UniswapV2Router{01,02}', () => {
 
           await token0.approve(router.address, MaxUint256)
           await mineBlock(provider, (await provider.getBlock('latest')).timestamp + 1)
+          const proof = generateVdf({
+              ...COMMON_VDF_OPTS,
+              path,
+              blockHash,
+              blockNumber,
+              knownQtyIn: swapAmount as any,
+              knownQtyOut: Zero as any,
+          });
           const tx = await router.swapExactTokensForTokens(
             swapAmount,
             0,
             [token0.address, token1.address],
             wallet.address,
             MaxUint256,
+            proof,
             overrides
           )
           const receipt = await tx.wait()
@@ -750,4 +778,3 @@ describe('UniswapV2Router{01,02}', () => {
     })
   }
 })
-*/

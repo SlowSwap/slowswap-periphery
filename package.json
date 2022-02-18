@@ -15,14 +15,12 @@
     "@slowswap/lib": "4.0.1-alpha"
   },
   "devDependencies": {
-    "@slowswap/vdf": "^1.0.0",
+    "@slowswap/vdf": "^1.0.10",
     "@types/chai": "^4.2.6",
     "@types/mocha": "^5.2.7",
-    "bignumber.js": "^9.0.2",
     "chai": "^4.2.0",
-    "ethereum-waffle": "^3.4.0",
+    "ethereum-waffle": "^2.4.1",
     "ethereumjs-util": "^6.2.0",
-    "ethers": "^5.5.4",
     "mocha": "^6.2.2",
     "ncp": "^2.0.0",
     "prettier": "^1.19.1",

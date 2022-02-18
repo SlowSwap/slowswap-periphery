@@ -3,18 +3,15 @@ import {
     Contract,
     utils as ethersUtils,
     providers as ethersProviders,
-    BigNumber,
-    BigNumberish,
 } from 'ethers'
+import { BigNumber, bigNumberify } from 'ethers/utils';
 
 type Web3Provider = ethersProviders.Web3Provider;
 
-export const bigNumberify = (v: BigNumberish) => BigNumber.from(v);
-
 export const NULL_ADDRESS = ethersUtils.hexZeroPad('0x', 20);
-export const ZERO = BigNumber.from(0);
+export const ZERO = bigNumberify(0);
 export const MINIMUM_LIQUIDITY = bigNumberify(10).pow(3)
-export const MAX_UINT256 = (2n ** 256n) - 1n;
+export const MAX_UINT256 = bigNumberify(2).pow(256).sub(1);
 const { keccak256, defaultAbiCoder, toUtf8Bytes, solidityPack } = ethersUtils;
 
 const PERMIT_TYPEHASH = keccak256(
@@ -86,8 +83,8 @@ export function randomHash(len: number = 32): string {
 }
 
 export function randomQuantity(decimals: number = 18): BigNumber {
-    const n = BigNumber.from(10).pow(decimals);
-    return BigNumber.from('0x' + crypto.randomBytes(32).toString('hex')).mod(n);
+    const n = bigNumberify(10).pow(decimals);
+    return bigNumberify('0x' + crypto.randomBytes(32).toString('hex')).mod(n);
 }
 
 export async function getTargetBlock(provider: Web3Provider, age: number = 0):
