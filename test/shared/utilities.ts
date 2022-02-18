@@ -1,8 +1,21 @@
-import { Contract } from 'ethers'
-import { Web3Provider } from 'ethers/providers'
-import { BigNumber, bigNumberify, keccak256, defaultAbiCoder, toUtf8Bytes, solidityPack } from 'ethers/utils'
+import crypto from 'crypto';
+import {
+    Contract,
+    utils as ethersUtils,
+    providers as ethersProviders,
+    BigNumber,
+    BigNumberish,
+} from 'ethers'
 
+type Web3Provider = ethersProviders.Web3Provider;
+
+export const bigNumberify = (v: BigNumberish) => BigNumber.from(v);
+
+export const NULL_ADDRESS = ethersUtils.hexZeroPad('0x', 20);
+export const ZERO = BigNumber.from(0);
 export const MINIMUM_LIQUIDITY = bigNumberify(10).pow(3)
+export const MAX_UINT256 = (2n ** 256n) - 1n;
+const { keccak256, defaultAbiCoder, toUtf8Bytes, solidityPack } = ethersUtils;
 
 const PERMIT_TYPEHASH = keccak256(
   toUtf8Bytes('Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)')
@@ -58,20 +71,30 @@ export async function getApprovalDigest(
 }
 
 export async function mineBlock(provider: Web3Provider, timestamp: number): Promise<void> {
-  await new Promise(async (resolve, reject) => {
-    ;(provider._web3Provider.sendAsync as any)(
-      { jsonrpc: '2.0', method: 'evm_mine', params: [timestamp] },
-      (error: any, result: any): void => {
-        if (error) {
-          reject(error)
-        } else {
-          resolve(result)
-        }
-      }
-    )
-  })
+    await provider.send(
+        'evm_mine',
+        [timestamp],
+    );
 }
 
 export function encodePrice(reserve0: BigNumber, reserve1: BigNumber) {
   return [reserve1.mul(bigNumberify(2).pow(112)).div(reserve0), reserve0.mul(bigNumberify(2).pow(112)).div(reserve1)]
+}
+
+export function randomHash(len: number = 32): string {
+    return '0x' + crypto.randomBytes(len).toString('hex');
+}
+
+export function randomQuantity(decimals: number = 18): BigNumber {
+    const n = BigNumber.from(10).pow(decimals);
+    return BigNumber.from('0x' + crypto.randomBytes(32).toString('hex')).mod(n);
+}
+
+export async function getTargetBlock(provider: Web3Provider, age: number = 0):
+    Promise<{ blockNumber: number; blockHash: string }>
+{
+    const currentBlockNumber = await provider.getBlockNumber();
+    const blockNumber = currentBlockNumber - age - 1;
+    const blockHash = (await provider.getBlock(blockNumber)).hash;
+    return { blockNumber, blockHash };
 }

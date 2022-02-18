@@ -1,5 +1,4 @@
-import { Wallet, Contract } from 'ethers'
-import { Web3Provider } from 'ethers/providers'
+import { Wallet, Contract, providers as ethersProviders } from 'ethers'
 import { deployContract } from 'ethereum-waffle'
 
 import { expandTo18Decimals } from './utilities'
@@ -9,10 +8,10 @@ import IUniswapV2Pair from '@slowswap/core/build/IUniswapV2Pair.json'
 
 import ERC20 from '../../build/ERC20.json'
 import WETH9 from '../../build/WETH9.json'
-import UniswapV1Exchange from '../../build/UniswapV1Exchange.json'
-import UniswapV1Factory from '../../build/UniswapV1Factory.json'
 import UniswapV2Router02 from '../../build/UniswapV2Router02.json'
 import RouterEventEmitter from '../../build/RouterEventEmitter.json'
+
+type Web3Provider = ethersProviders.Web3Provider;
 
 const overrides = {
   gasLimit: 9999999
@@ -23,15 +22,17 @@ interface V2Fixture {
   token1: Contract
   WETH: Contract
   WETHPartner: Contract
-  factoryV1: Contract
   factoryV2: Contract
   router02: Contract
   routerEventEmitter: Contract
   router: Contract
-  WETHExchangeV1: Contract
   pair: Contract
   WETHPair: Contract
 }
+
+export const VDF_N = '44771746775035800231893057667067514385523709770528832291415080542575843241867';
+export const VDF_T = 1000;
+export const VDF_MAX_BLOCK_AGE = 5;
 
 export async function v2Fixture(provider: Web3Provider, [wallet]: Wallet[]): Promise<V2Fixture> {
   // deploy tokens
@@ -40,27 +41,22 @@ export async function v2Fixture(provider: Web3Provider, [wallet]: Wallet[]): Pro
   const WETH = await deployContract(wallet, WETH9)
   const WETHPartner = await deployContract(wallet, ERC20, [expandTo18Decimals(10000)])
 
-  // deploy V1
-  const factoryV1 = await deployContract(wallet, UniswapV1Factory, [])
-  await factoryV1.initializeFactory((await deployContract(wallet, UniswapV1Exchange, [])).address)
-
   // deploy V2
   const factoryV2 = await deployContract(wallet, UniswapV2Factory, [wallet.address])
 
   // deploy routers
-  const router02 = await deployContract(wallet, UniswapV2Router02, [factoryV2.address, WETH.address], overrides)
+  const router02 = await deployContract(
+      wallet,
+      UniswapV2Router02,
+      [factoryV2.address, WETH.address, VDF_N, VDF_T],
+      overrides
+  );
 
   // event emitter for testing
   const routerEventEmitter = await deployContract(wallet, RouterEventEmitter, [])
 
-  // initialize V1
-  await factoryV1.createExchange(WETHPartner.address, overrides)
-  const WETHExchangeV1Address = await factoryV1.getExchange(WETHPartner.address)
-  const WETHExchangeV1 = new Contract(WETHExchangeV1Address, JSON.stringify(UniswapV1Exchange.abi), provider).connect(
-    wallet
-  )
-
   // initialize V2
+  await factoryV2.toggleAllowedPairCaller(router02.address, true);
   await factoryV2.createPair(tokenA.address, tokenB.address)
   const pairAddress = await factoryV2.getPair(tokenA.address, tokenB.address)
   const pair = new Contract(pairAddress, JSON.stringify(IUniswapV2Pair.abi), provider).connect(wallet)
@@ -78,12 +74,10 @@ export async function v2Fixture(provider: Web3Provider, [wallet]: Wallet[]): Pro
     token1,
     WETH,
     WETHPartner,
-    factoryV1,
     factoryV2,
     router02,
     router: router02, // the default router, 01 had a minor bug
     routerEventEmitter,
-    WETHExchangeV1,
     pair,
     WETHPair
   }

@@ -6,10 +6,12 @@ import "./interfaces/IVDF.sol";
 contract WeakVDF is IVDF {
     uint256 public immutable N;
     uint256 public immutable T;
+    uint256 public immutable MAX_BLOCK_AGE;
 
-    constructor(uint256 N_, uint256 T_) {
+    constructor(uint256 N_, uint256 T_, uint256 maxBlockAge) {
         N = N_;
         T = T_;
+        MAX_BLOCK_AGE = maxBlockAge;
     }
 
     function isValidProof(bytes32 seed, bytes memory proofBytes)
@@ -17,40 +19,35 @@ contract WeakVDF is IVDF {
         view
         returns (bool)
     {
-        if (proofBytes.length != 64) {
+        if (proofBytes.length != 96) {
             return false;
         }
-        uint256 pi; // VDF proof
-        uint256 y; // VDF solution
-        uint256 b; // target block
-        assembly {
-            let p := add(36, calldataload(36))
-            pi := calldataload(p)         // pi
-            y := calldataload(add(p, 32)) // y
-            b := calldataload(add(p, 64)) // block number
-        }
+        (uint256 pi, uint256 y, uint256 b) =
+            abi.decode(proofBytes, (uint256, uint256, uint256));
         uint256 x = _generateX(seed, b);
-        uint256 c = _generateChallenge(x, y, pi);
+        uint256 c = _generateChallenge(x, y);
         return y == mulmod(_expmod(pi, c, N), _expmod(x, _expmod(2, T, c), N), N);
     }
 
     function _generateX(bytes32 seed, uint256 blockNumber)
-        private
+        internal
         view
         returns (uint256 x)
     {
-        require(blockNumber < block.number, 'INVALID_BLOCK_NUMBER');
+        require(blockNumber + MAX_BLOCK_AGE >= block.number, 'INVALID_BLOCK_NUMBER');
+        uint256 n = N;
         assembly {
             let p := mload(0x40)
             mstore(p, seed)
             mstore(add(p, 0x20), blockhash(blockNumber))
             // mstore(add(p, 0x40), gasprice()) // Allow on non-EIP1559 networks?
             x := keccak256(p, 0x40)
+            x := mod(x, n)
         }
     }
 
-    function _generateChallenge(uint256 x, uint256 y, uint256 pi)
-        private
+    function _generateChallenge(uint256 x, uint256 y)
+        internal
         view
         returns (uint256 c)
     {
@@ -60,10 +57,9 @@ contract WeakVDF is IVDF {
             let p := mload(0x40)
             mstore(p, x)
             mstore(add(p, 0x20), y)
-            mstore(add(p, 0x40), pi)
-            mstore(add(p, 0x60), n)
-            mstore(add(p, 0x80), t)
-            c := or(keccak256(p, 0xA0), 1)
+            mstore(add(p, 0x40), n)
+            mstore(add(p, 0x60), t)
+            c := or(keccak256(p, 0x80), 1)
         }
     }
 
@@ -73,7 +69,7 @@ contract WeakVDF is IVDF {
         uint256 m
     )
         view
-        public
+        internal
         returns (uint256 r)
     {
         // Call the precompile.

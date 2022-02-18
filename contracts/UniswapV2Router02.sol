@@ -22,8 +22,8 @@ contract UniswapV2Router02 is IUniswapV2Router02, WeakVDF {
         _;
     }
 
-    constructor(address _factory, address _WETH, uint256 vdfN, uint256 vdfT)
-        WeakVDF(vdfN, vdfT)
+    constructor(address _factory, address _WETH, uint256 vdfN, uint256 vdfT, uint256 vdfMaxBlockAge)
+        WeakVDF(vdfN, vdfT, vdfMaxBlockAge)
     {
         factory = _factory;
         WETH = _WETH;
