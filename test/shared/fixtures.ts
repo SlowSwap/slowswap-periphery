@@ -57,6 +57,7 @@ export async function v2Fixture(provider: Web3Provider, [wallet]: Wallet[]): Pro
 
   // initialize V2
   await factoryV2.toggleAllowedPairCaller(router02.address, true);
+  await factoryV2.toggleAllowedPairCaller(routerEventEmitter.address, true);
   await factoryV2.createPair(tokenA.address, tokenB.address)
   const pairAddress = await factoryV2.getPair(tokenA.address, tokenB.address)
   const pair = new Contract(pairAddress, JSON.stringify(IUniswapV2Pair.abi), provider).connect(wallet)

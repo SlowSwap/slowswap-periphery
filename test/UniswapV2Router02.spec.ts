@@ -1,4 +1,3 @@
-/*
 import chai, { expect } from 'chai'
 import { solidity, MockProvider, createFixtureLoader, deployContract } from 'ethereum-waffle'
 import { Contract } from 'ethers'
@@ -18,6 +17,7 @@ const overrides = {
   gasLimit: 9999999
 }
 
+// TODO
 describe('UniswapV2Router02', () => {
   const provider = new MockProvider({
     hardfork: 'istanbul',
@@ -122,7 +122,7 @@ describe('UniswapV2Router02', () => {
   })
 })
 
-describe('fee-on-transfer tokens', () => {
+describe.skip('fee-on-transfer tokens', () => {
   const provider = new MockProvider({
     hardfork: 'istanbul',
     mnemonic: 'horn horn horn horn horn horn horn horn horn horn horn horn',
@@ -309,7 +309,7 @@ describe('fee-on-transfer tokens', () => {
   })
 })
 
-describe('fee-on-transfer tokens: reloaded', () => {
+describe.skip('fee-on-transfer tokens: reloaded', () => {
   const provider = new MockProvider({
     hardfork: 'istanbul',
     mnemonic: 'horn horn horn horn horn horn horn horn horn horn horn horn',
@@ -379,4 +379,3 @@ describe('fee-on-transfer tokens: reloaded', () => {
     })
   })
 })
-*/
