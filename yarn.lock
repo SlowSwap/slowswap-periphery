@@ -269,10 +269,10 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
   integrity sha512-9NET910DNaIPngYnLLPeg+Ogzqsi9uM4mSboU5y6p8S5DzMTVEsJZrawi+BoDNUVBa2DhJqQYUFvMDfgU062LQ==
 
-"@slowswap/core@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@slowswap/core/-/core-1.0.1.tgz#e91ee38a82e3d69499eb46680ddcf74ec6a41865"
-  integrity sha512-pmDuLnbDceu7+jaPfmOU2gOgpI0UUGNnFn9zAfvT7rDEJIzcbCgcgik6Sx3c7Cr0lct0KQ0pepEoCydH5DztnA==
+"@slowswap/core@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@slowswap/core/-/core-1.0.2.tgz#b4a8bfd8ffc60b2d781663a0d00423439db49b11"
+  integrity sha512-boVTlBdeQItpI20TeD0NK+z+QTIXkKtmmOrYSFG1fqQXCtu5eOBEZTquLB8IF9nJ18+LBIco3HqxWS8+DoswKA==
 
 "@slowswap/lib@4.0.1-alpha":
   version "4.0.1-alpha"

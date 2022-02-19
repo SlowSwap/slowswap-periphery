@@ -1,6 +1,6 @@
 {
   "name": "@slowswap/periphery",
-  "version": "1.1.0-beta.0",
+  "version": "1.1.1",
   "description": "🎚 Peripheral smart contracts for interacting with Uniswap V2",
   "engines": {
     "node": ">=12"
@@ -11,7 +11,7 @@
     "contracts"
   ],
   "dependencies": {
-    "@slowswap/core": "^1.0.1",
+    "@slowswap/core": "^1.0.2",
     "@slowswap/lib": "4.0.1-alpha"
   },
   "devDependencies": {
