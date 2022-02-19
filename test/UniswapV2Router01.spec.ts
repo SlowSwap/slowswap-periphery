@@ -263,9 +263,7 @@ describe('UniswapV2Router{01,02}', () => {
           wallet.address,
           MaxUint256,
           false,
-          v,
-          r,
-          s,
+          { v, r, s },
           overrides
         )
       })
@@ -298,9 +296,7 @@ describe('UniswapV2Router{01,02}', () => {
           wallet.address,
           MaxUint256,
           false,
-          v,
-          r,
-          s,
+          { v, r, s },
           overrides
         )
       })

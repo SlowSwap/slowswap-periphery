@@ -219,9 +219,7 @@ describe.skip('fee-on-transfer tokens', () => {
       wallet.address,
       MaxUint256,
       false,
-      v,
-      r,
-      s,
+      { v, r, s, },
       overrides
     )
   })
