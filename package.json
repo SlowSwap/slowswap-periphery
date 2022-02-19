@@ -11,7 +11,7 @@
     "contracts"
   ],
   "dependencies": {
-    "@slowswap/core": "^1.0.3",
+    "@slowswap/core": "^1.0.4",
     "@slowswap/lib": "4.0.1-alpha"
   },
   "devDependencies": {
