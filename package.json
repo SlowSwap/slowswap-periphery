@@ -11,11 +11,11 @@
     "contracts"
   ],
   "dependencies": {
-    "@slowswap/core": "^1.0.2",
+    "@slowswap/core": "=1.0.2",
     "@slowswap/lib": "4.0.1-alpha"
   },
   "devDependencies": {
-    "@slowswap/vdf": "^1.0.10",
+    "@slowswap/vdf": "^1.0.11",
     "@types/chai": "^4.2.6",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",

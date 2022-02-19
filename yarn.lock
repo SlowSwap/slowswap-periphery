@@ -269,7 +269,7 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
   integrity sha512-9NET910DNaIPngYnLLPeg+Ogzqsi9uM4mSboU5y6p8S5DzMTVEsJZrawi+BoDNUVBa2DhJqQYUFvMDfgU062LQ==
 
-"@slowswap/core@^1.0.2":
+"@slowswap/core@=1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@slowswap/core/-/core-1.0.2.tgz#b4a8bfd8ffc60b2d781663a0d00423439db49b11"
   integrity sha512-boVTlBdeQItpI20TeD0NK+z+QTIXkKtmmOrYSFG1fqQXCtu5eOBEZTquLB8IF9nJ18+LBIco3HqxWS8+DoswKA==
@@ -279,10 +279,10 @@
   resolved "https://registry.yarnpkg.com/@slowswap/lib/-/lib-4.0.1-alpha.tgz#c1afd7b1b6bc09fc6c2e9dd37d6c4f1f18341208"
   integrity sha512-wUAy1cw0/3df36QtFug/7yrlzZluBNKQBRyIPssmcPTXvnNae3YvmwGqY1f4FY44cM5dtNjeP0lBK/0ayzDSZw==
 
-"@slowswap/vdf@^1.0.10":
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/@slowswap/vdf/-/vdf-1.0.10.tgz#800e9431e5e45c89371826d1ec0c8d48daf3cbb1"
-  integrity sha512-NPxdeZwCU3TlfGiEgDMXeiPtMjZmJz5yWwVtI6TvraK4jXojqdoQJzImHrApOhh9uhmuvkN9szfHX5ZbmuVlRA==
+"@slowswap/vdf@^1.0.11":
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/@slowswap/vdf/-/vdf-1.0.11.tgz#c75eeafead18d3f0655ec82d71b4461bea406f14"
+  integrity sha512-u1q30RGScbxdA876vs1PwCrzNlLgHLUohg3DHP8Atz9h8/nmeDDQquUUbKuZHuKcHQJrqwOsh5Jmw5r3mQbTHQ==
   dependencies:
     bignumber.js "^9.0.2"
     ethereumjs-util "^7.1.4"
