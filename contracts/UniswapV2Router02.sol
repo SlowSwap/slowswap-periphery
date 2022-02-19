@@ -554,7 +554,7 @@ contract UniswapV2Router02 is IUniswapV2Router02, WeakVDF {
         uint knownQtyOut,
         bytes memory proofBytes
     )
-        public
+        internal
         view
     {
         bytes32 seed = generateSeed(tx.origin, path, knownQtyIn, knownQtyOut);
