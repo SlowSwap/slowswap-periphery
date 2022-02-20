@@ -3,7 +3,7 @@ import { solidity, MockProvider, createFixtureLoader, deployContract } from 'eth
 import { Contract } from 'ethers'
 import { BigNumber, bigNumberify } from 'ethers/utils'
 import { MaxUint256 } from 'ethers/constants'
-import IUniswapV2Pair from '@uniswap/v2-core/build/IUniswapV2Pair.json'
+import IUniswapV2Pair from '@slowswap/core/build/IUniswapV2Pair.json'
 
 import { v2Fixture } from './shared/fixtures'
 import { expandTo18Decimals, getApprovalDigest, MINIMUM_LIQUIDITY } from './shared/utilities'
@@ -17,6 +17,7 @@ const overrides = {
   gasLimit: 9999999
 }
 
+// TODO
 describe('UniswapV2Router02', () => {
   const provider = new MockProvider({
     hardfork: 'istanbul',
@@ -121,7 +122,7 @@ describe('UniswapV2Router02', () => {
   })
 })
 
-describe('fee-on-transfer tokens', () => {
+describe.skip('fee-on-transfer tokens', () => {
   const provider = new MockProvider({
     hardfork: 'istanbul',
     mnemonic: 'horn horn horn horn horn horn horn horn horn horn horn horn',
@@ -218,9 +219,7 @@ describe('fee-on-transfer tokens', () => {
       wallet.address,
       MaxUint256,
       false,
-      v,
-      r,
-      s,
+      { v, r, s, },
       overrides
     )
   })
@@ -308,7 +307,7 @@ describe('fee-on-transfer tokens', () => {
   })
 })
 
-describe('fee-on-transfer tokens: reloaded', () => {
+describe.skip('fee-on-transfer tokens: reloaded', () => {
   const provider = new MockProvider({
     hardfork: 'istanbul',
     mnemonic: 'horn horn horn horn horn horn horn horn horn horn horn horn',

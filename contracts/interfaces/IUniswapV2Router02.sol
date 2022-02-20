@@ -1,8 +1,10 @@
-pragma solidity >=0.6.2;
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8;
 
 import './IUniswapV2Router01.sol';
+import './IVDF.sol';
 
-interface IUniswapV2Router02 is IUniswapV2Router01 {
+interface IUniswapV2Router02 is IUniswapV2Router01, IVDF {
     function removeLiquidityETHSupportingFeeOnTransferTokens(
         address token,
         uint liquidity,
@@ -18,7 +20,8 @@ interface IUniswapV2Router02 is IUniswapV2Router01 {
         uint amountETHMin,
         address to,
         uint deadline,
-        bool approveMax, uint8 v, bytes32 r, bytes32 s
+        bool approveMax,
+        Signature calldata signature
     ) external returns (uint amountETH);
 
     function swapExactTokensForTokensSupportingFeeOnTransferTokens(
@@ -26,19 +29,22 @@ interface IUniswapV2Router02 is IUniswapV2Router01 {
         uint amountOutMin,
         address[] calldata path,
         address to,
-        uint deadline
+        uint deadline,
+        bytes calldata proof
     ) external;
     function swapExactETHForTokensSupportingFeeOnTransferTokens(
         uint amountOutMin,
         address[] calldata path,
         address to,
-        uint deadline
+        uint deadline,
+        bytes calldata proof
     ) external payable;
     function swapExactTokensForETHSupportingFeeOnTransferTokens(
         uint amountIn,
         uint amountOutMin,
         address[] calldata path,
         address to,
-        uint deadline
+        uint deadline,
+        bytes calldata proof
     ) external;
 }

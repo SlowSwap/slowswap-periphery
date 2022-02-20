@@ -1,4 +1,5 @@
-pragma solidity =0.6.6;
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8;
 
 import '../interfaces/IUniswapV2Router01.sol';
 
@@ -13,10 +14,11 @@ contract RouterEventEmitter {
         uint amountOutMin,
         address[] calldata path,
         address to,
-        uint deadline
+        uint deadline,
+        bytes calldata proof
     ) external {
         (bool success, bytes memory returnData) = router.delegatecall(abi.encodeWithSelector(
-            IUniswapV2Router01(router).swapExactTokensForTokens.selector, amountIn, amountOutMin, path, to, deadline
+            IUniswapV2Router01(router).swapExactTokensForTokens.selector, amountIn, amountOutMin, path, to, deadline, proof
         ));
         assert(success);
         emit Amounts(abi.decode(returnData, (uint[])));
@@ -28,10 +30,11 @@ contract RouterEventEmitter {
         uint amountInMax,
         address[] calldata path,
         address to,
-        uint deadline
+        uint deadline,
+        bytes calldata proof
     ) external {
         (bool success, bytes memory returnData) = router.delegatecall(abi.encodeWithSelector(
-            IUniswapV2Router01(router).swapTokensForExactTokens.selector, amountOut, amountInMax, path, to, deadline
+            IUniswapV2Router01(router).swapTokensForExactTokens.selector, amountOut, amountInMax, path, to, deadline, proof
         ));
         assert(success);
         emit Amounts(abi.decode(returnData, (uint[])));
@@ -42,10 +45,11 @@ contract RouterEventEmitter {
         uint amountOutMin,
         address[] calldata path,
         address to,
-        uint deadline
+        uint deadline,
+        bytes calldata proof
     ) external payable {
         (bool success, bytes memory returnData) = router.delegatecall(abi.encodeWithSelector(
-            IUniswapV2Router01(router).swapExactETHForTokens.selector, amountOutMin, path, to, deadline
+            IUniswapV2Router01(router).swapExactETHForTokens.selector, amountOutMin, path, to, deadline, proof
         ));
         assert(success);
         emit Amounts(abi.decode(returnData, (uint[])));
@@ -57,10 +61,11 @@ contract RouterEventEmitter {
         uint amountInMax,
         address[] calldata path,
         address to,
-        uint deadline
+        uint deadline,
+        bytes calldata proof
     ) external {
         (bool success, bytes memory returnData) = router.delegatecall(abi.encodeWithSelector(
-            IUniswapV2Router01(router).swapTokensForExactETH.selector, amountOut, amountInMax, path, to, deadline
+            IUniswapV2Router01(router).swapTokensForExactETH.selector, amountOut, amountInMax, path, to, deadline, proof
         ));
         assert(success);
         emit Amounts(abi.decode(returnData, (uint[])));
@@ -72,10 +77,11 @@ contract RouterEventEmitter {
         uint amountOutMin,
         address[] calldata path,
         address to,
-        uint deadline
+        uint deadline,
+        bytes calldata proof
     ) external {
         (bool success, bytes memory returnData) = router.delegatecall(abi.encodeWithSelector(
-            IUniswapV2Router01(router).swapExactTokensForETH.selector, amountIn, amountOutMin, path, to, deadline
+            IUniswapV2Router01(router).swapExactTokensForETH.selector, amountIn, amountOutMin, path, to, deadline, proof
         ));
         assert(success);
         emit Amounts(abi.decode(returnData, (uint[])));
@@ -86,10 +92,11 @@ contract RouterEventEmitter {
         uint amountOut,
         address[] calldata path,
         address to,
-        uint deadline
+        uint deadline,
+        bytes calldata proof
     ) external payable {
         (bool success, bytes memory returnData) = router.delegatecall(abi.encodeWithSelector(
-            IUniswapV2Router01(router).swapETHForExactTokens.selector, amountOut, path, to, deadline
+            IUniswapV2Router01(router).swapETHForExactTokens.selector, amountOut, path, to, deadline, proof
         ));
         assert(success);
         emit Amounts(abi.decode(returnData, (uint[])));
